@@ -1,194 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palindrome Checker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Validador de Palíndromos</title>
     <style>
-        .flip-in {
-            animation: flipIn 0.5s ease-out;
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
-        
-        @keyframes flipIn {
-            0% {
-                transform: rotateX(90deg);
-                opacity: 0;
-            }
-            100% {
-                transform: rotateX(0deg);
-                opacity: 1;
-            }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
         }
-        
-        .shake {
-            animation: shake 0.5s;
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
         }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
+        p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 17px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #resultado {
+            margin-top: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .es-palindrome {
+            color: #28a745; /* Verde para palíndromo */
+        }
+        .no-palindrome {
+            color: #dc3545; /* Rojo para no palíndromo */
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
-        <div class="bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
-            <div class="bg-indigo-600 p-6 text-white">
-                <h1 class="text-2xl font-bold flex items-center">
-                    <i class="fas fa-palindrome mr-3"></i>
-                    Palindrome Checker
-                </h1>
-                <p class="text-indigo-100 mt-1">Check if your phrase reads the same forwards and backwards</p>
-            </div>
-            
-            <div class="p-6">
-                <div class="relative">
-                    <input 
-                        type="text" 
-                        id="phraseInput" 
-                        placeholder="Enter a word or phrase..." 
-                        class="w-full p-4 border-2 border-gray-200 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 pr-12"
-                        autocomplete="off"
-                    >
-                    <button 
-                        id="checkBtn" 
-                        class="absolute right-2 top-2 bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 transition-colors duration-200"
-                        title="Check Palindrome"
-                    >
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-                
-                <div id="resultContainer" class="mt-6 hidden">
-                    <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg border">
-                        <div class="flex items-center">
-                            <i id="resultIcon" class="fas fa-question-circle text-2xl mr-3"></i>
-                            <div>
-                                <h3 class="font-semibold" id="resultTitle">Checking...</h3>
-                                <p class="text-sm text-gray-600" id="resultDescription"></p>
-                            </div>
-                        </div>
-                        <span id="resultBadge" class="px-3 py-1 rounded-full text-xs font-medium"></span>
-                    </div>
-                    
-                    <div id="phraseDetails" class="mt-4 bg-blue-50 p-4 rounded-lg hidden">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <p class="text-sm text-gray-500">Original:</p>
-                                <p class="font-medium" id="originalPhrase"></p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Reversed:</p>
-                                <p class="font-medium" id="reversedPhrase"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mt-8 pt-4 border-t border-gray-100">
-                    <h3 class="text-sm font-semibold text-gray-500 mb-2">Examples to try:</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <button class="example-btn text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">Racecar</button>
-                        <button class="example-btn text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">A man a plan a canal Panama</button>
-                        <button class="example-btn text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">No lemon, no melon</button>
-                        <button class="example-btn text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">Not a palindrome</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="mt-6 text-center text-sm text-gray-500">
-            <p>Palindrome: a word, phrase, or sequence that reads the same backward as forward.</p>
-        </div>
+<body>
+    <div class="container">
+        <h1>¿Es un Palíndromo?</h1>
+        <p>Introduce una palabra o frase para saber si es un palíndromo.</p>
+        <input type="text" id="inputText" placeholder="Ej: Anita lava la tina">
+        <button onclick="verificarPalindromo()">Verificar</button>
+        <div id="resultado"></div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const phraseInput = document.getElementById('phraseInput');
-            const checkBtn = document.getElementById('checkBtn');
-            const resultContainer = document.getElementById('resultContainer');
-            const resultIcon = document.getElementById('resultIcon');
-            const resultTitle = document.getElementById('resultTitle');
-            const resultDescription = document.getElementById('resultDescription');
-            const resultBadge = document.getElementById('resultBadge');
-            const phraseDetails = document.getElementById('phraseDetails');
-            const originalPhrase = document.getElementById('originalPhrase');
-            const reversedPhrase = document.getElementById('reversedPhrase');
-            const exampleBtns = document.querySelectorAll('.example-btn');
-            
-            // Function to check if a phrase is palindrome
-            function isPalindrome(phrase) {
-                // Remove all non-alphanumeric characters and convert to lowercase
-                const cleaned = phrase.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-                // Reverse the string
-                const reversed = cleaned.split('').reverse().join('');
-                // Compare original with reversed
-                return cleaned === reversed;
+        function verificarPalindromo() {
+            const inputText = document.getElementById('inputText').value;
+            const resultadoDiv = document.getElementById('resultado');
+
+            // Limpiar la cadena: quitar espacios, signos de puntuación y convertir a minúsculas
+            const cleanedText = inputText.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+            // Invertir la cadena
+            const reversedText = cleanedText.split('').reverse().join('');
+
+            if (cleanedText === '') {
+                resultadoDiv.textContent = 'Por favor, introduce una palabra o frase.';
+                resultadoDiv.className = ''; // Limpiar clases de color
+            } else if (cleanedText === reversedText) {
+                resultadoDiv.textContent = `"${inputText}" ES un palíndromo.`;
+                resultadoDiv.className = 'es-palindrome';
+            } else {
+                resultadoDiv.textContent = `"${inputText}" NO es un palíndromo.`;
+                resultadoDiv.className = 'no-palindrome';
             }
-            
-            // Function to display results
-            function showResult(isPalindrome, phrase) {
-                resultContainer.classList.remove('hidden');
-                resultContainer.classList.add('flip-in');
-                
-                const cleanedPhrase = phrase.replace(/[^a-zA-Z0-9]/g, '');
-                const reversed = cleanedPhrase.split('').reverse().join('');
-                
-                if (isPalindrome) {
-                    resultIcon.className = 'fas fa-check-circle text-2xl mr-3 text-green-500';
-                    resultTitle.textContent = 'Palindrome Found!';
-                    resultDescription.textContent = `"${phrase}" reads the same forwards and backwards.`;
-                    resultBadge.textContent = 'Valid';
-                    resultBadge.className = 'px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800';
-                } else {
-                    resultIcon.className = 'fas fa-times-circle text-2xl mr-3 text-red-500';
-                    resultTitle.textContent = 'Not a Palindrome';
-                    resultDescription.textContent = `"${phrase}" does not read the same backwards.`;
-                    resultBadge.textContent = 'Invalid';
-                    resultBadge.className = 'px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800';
-                }
-                
-                // Show details
-                originalPhrase.textContent = cleanedPhrase.toLowerCase();
-                reversedPhrase.textContent = reversed.toLowerCase();
-                phraseDetails.classList.remove('hidden');
-            }
-            
-            // Check when button is clicked
-            checkBtn.addEventListener('click', function() {
-                const phrase = phraseInput.value.trim();
-                
-                if (!phrase) {
-                    phraseInput.classList.add('shake');
-                    phraseInput.focus();
-                    setTimeout(() => {
-                        phraseInput.classList.remove('shake');
-                    }, 500);
-                    return;
-                }
-                
-                const palindrome = isPalindrome(phrase);
-                showResult(palindrome, phrase);
-            });
-            
-            // Also check when Enter is pressed
-            phraseInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    checkBtn.click();
-                }
-            });
-            
-            // Example buttons
-            exampleBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    phraseInput.value = this.textContent;
-                    phraseInput.focus();
-                });
-            });
-        });
+        }
     </script>
 </body>
 </html>
